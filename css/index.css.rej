@@ -1,0 +1,9 @@
+diff a/www/css/index.css b/www/css/index.css	(rejected hunks)
+@@ -311,6 +311,7 @@
+     font-family: 'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
+     color: #FFFFFF;
+     font-size: 17px;
++    overflow: visible;
+ }
+ 
+ #my_top_bar {
