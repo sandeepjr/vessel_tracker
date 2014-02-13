@@ -766,14 +766,10 @@ function update_auto_complete(sdc_settings_auto) {
         // forceFirstChoiceOnEnterKey : true,
         // link: 'target.html?term=',
         select: function(event, ui) { 
-          alert(ui.item.value);
-          if(ui.item.value == null) {
-            GetMap();
-            update_vessel_positions();
-          }else{
+          
             var$("#vessel_name").val(ui.item.value);
             $("#search_form").submit();
-          }
+          
         },
         link: "javascript:$('li a').click(function(e){var a=e.currentTarget;$('#vessel_name').val(a.text);$('#search_form').submit();$('#vessel_name').autocomplete('clear');});"
       });
@@ -1203,7 +1199,9 @@ if (sdc_settings == null || sdc_settings.length == 0) {
         // $("#ajax_error").center();
       }
     } else {
+
       req = fetch_results('',sdc_settings,favoriteShips);
+      $('.favorites').html(print_favorites_result(req));
     }
   }
 }
@@ -1254,7 +1252,7 @@ function getURLParameter(name) {
 //   });
 // }
 
-$("#search_form").submit(function() {
+$("#search_form").submit(function() { 
   $('input#vessel_name').blur();
   
   if($('#trackermap').is(":visible")) {
@@ -1269,17 +1267,20 @@ $("#search_form").submit(function() {
     if (port_lat[port_index] == 999) {
       alert('Sorry, unable to find port. We have been informed, and will fix this soon.');
     } else {
-      map.setZoom(7);
-      map.setCenter(new google.maps.LatLng(port_lat[port_index], port_lng[port_index]));
+     /* map.setZoom(7);
+      map.setCenter(new google.maps.LatLng(port_lat[port_index], port_lng[port_index]));*/
       // show_vessel_positions();
     }
   } else {
     // query = encodeURIComponent(query);
     if ($('#vessel_name').val() == 'Search for a Vessel / Port') {
-      query = '';
-    }
+      //query = '';
+      GetMap();
+      update_vessel_positions();
+    }else{
     
-    fetch_results(query,sdc_settings);
+     fetch_results(query,sdc_settings);
+   }
   }
   return false;
 });
@@ -1311,6 +1312,7 @@ $('#top_settings').click(function(){
 
 $('#top_worldmap').click(function(){ 
   hide_all_content();
+  alert('here1');
   if ($('#top_worldmap img').attr('src') == 'img/globe.png') {
     $('#trackermap').show();
     $('#vessel_name').val("");
@@ -1319,15 +1321,18 @@ $('#top_worldmap').click(function(){
     $('#top_worldmap img').attr('src','img/star2.png');
   }
   else { 
+    alert('here2');
     hide_all_content();
     $(".favorites").html('');
     $(".favorites").show();
-    
+    favoriteShips = JSON.parse($.jStorage.get("favoriteShips"));    
+
     // $('.welcome').show();
     $("#vessel_name").val('Search for a Vessel / Port');
     $("#vessel_name").css('color','rgb(146,146,146)');
     // $('.spinner').css('display', 'none');
     if (favoriteShips == null || favoriteShips.length == 0) {
+      alert('here3');
       favoriteShips = new Array();
       if (first_time == 'false') {
         $("#ajax_error").css('display','inline');
@@ -1335,10 +1340,13 @@ $('#top_worldmap').click(function(){
         $("#ajax_error").center();
       }
     } else {
+      alert('here4');
       req = fetch_results('',sdc_settings,favoriteShips);
+      $('.favorites').html(print_favorites_result(req));
     }
     $('#top_worldmap img').attr('src','img/globe.png');
   }
+  alert('here5');
 });
 
 
@@ -1461,9 +1469,15 @@ var vessel_positions;
 
 function update_vessel_positions() {
   //map.entities.clear();
+var qr_url = 'https://getVesselTracker.com/get_vessel_positions.php?sdc_settings='+JSON.stringify(sdc_settings) + 
+      '&vtype_settings='+JSON.stringify(vtype_settings)
+      + '&pal_user_id=' + $.jStorage.get("pal_user_id");
+/*  q2_url = "https://getVesselTracker.com/vessel_tracker.php?source=purplefinder&favorites="+JSON.stringify(favorites) + '&pal_user_id=' + $.jStorage.get("pal_user_id");
   RequestData('https://getVesselTracker.com/get_vessel_positions.php?sdc_settings='+JSON.stringify(sdc_settings) + 
       '&vtype_settings='+JSON.stringify(vtype_settings)
-      + '&pal_user_id=' + $.jStorage.get("pal_user_id")); 
+      + '&pal_user_id=' + $.jStorage.get("pal_user_id")); */
+//  q2_url = "https://getVesselTracker.com/vessel_tracker.php?source=purplefinder&vessel_name="+query+"&sdc_settings="+JSON.stringify(sdc_settings) + '&pal_user_id=' + $.jStorage.get("pal_user_id");
+RequestData(qr_url);
 }
 var path_vessel_imo;
 // Function to show Ship Position
@@ -1829,8 +1843,9 @@ function RequestData(url) {
            for (var i = 0; i < data.length; i++) {
             var lat_lon = parse_lat_lon(data[i]);
             dat.push(new DataModel(data[i]['asset-name'], lat_lon['lat'], lat_lon['lon'],
-              prsflt(data[i]['speed-value-of-value'])+prsflt(data[i]['speed-units-of-value']),'',
-              prsflt(data[i]['i-m-o-number']), prsflt(data[i]['heading-value-of-value'])));
+              data[i]['speed-value-of-value']+data[i]['speed-units-of-value'],
+              data[i]['trail-date-time-date-of-value']+data[i]['trail-date-time-time-of-value'],
+              data[i]['i-m-o-number'], prsflt(data[i]['heading-value-of-value'])));
           }
         } else {
           for( var i in data) {
@@ -1839,9 +1854,9 @@ function RequestData(url) {
               print_popup_content(data[i][j]);
               
               dat.push(new DataModel(data[i][j]['asset-name'], lat_lon['lat'], lat_lon['lon'], 
-                prsflt(data[i][j]['speed-value-of-value'])+prsflt(data[i][j]['speed-units-of-value']), 
-                prsflt(data[i][j]['trail-date-time-date-of-value'])+prsflt(data[i][j]['trail-date-time-time-of-value']),
-                prsflt(data[i][j]['i-m-o-number']), prsflt(data[i][j]['heading-value-of-value'])));
+                data[i][j]['speed-value-of-value']+data[i][j]['speed-units-of-value'], 
+                data[i][j]['trail-date-time-date-of-value']+data[i][j]['trail-date-time-time-of-value'],
+                data[i][j]['i-m-o-number'], prsflt(data[i][j]['heading-value-of-value'])));
             }
           }
         }
