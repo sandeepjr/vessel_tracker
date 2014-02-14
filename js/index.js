@@ -1648,6 +1648,7 @@ function clear_marker(imo) {
 }
 
 function show_vessel_path(imo, degrees) {
+  map.entities.remove(layer2 );
   var url = 'https://getVesselTracker.com/get_vessel_position_history.php?i-m-o-number='+imo;
   req = $.ajax({
     url: url,
@@ -1689,8 +1690,12 @@ function show_vessel_path(imo, degrees) {
   });
 }
 var vessel_path_plotted;
+var layer2;
 // Function to Show ship_track
 function plot_vessel_track(current_position_lat_lon,previous_positions_lat_lon) {
+ 
+
+
   //MapLayer.Children.Clear();
 // map.entities.clear();
   //map = new Microsoft.Maps.Map(document.getElementById("trackermap"), { credentials: "AvOyltb0YAu_Ldagk8wP_XiQQGfXkHo5rlWlLs-mIpsB3Gcvt87UC-BIZdgc3QbL" });
@@ -1702,9 +1707,11 @@ function plot_vessel_track(current_position_lat_lon,previous_positions_lat_lon) 
   }
   map.setView({center: new Microsoft.Maps.Location(current_position_lat_lon['lat'], current_position_lat_lon['lon'])});
   var line = new Microsoft.Maps.Polyline(lineVertices);
+layer2 = new Microsoft.Maps.EntityCollection();
+  layer2.push(line);
   /*vessel_path_plotted = line;
   map.entities.remove(vessel_path_plotted);*/
-  map.entities.push(line);
+  map.entities.push(layer2);
 }
 
 // show_vessel_positions();
