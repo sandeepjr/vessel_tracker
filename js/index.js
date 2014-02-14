@@ -1649,6 +1649,7 @@ function clear_marker(imo) {
 
 function show_vessel_path(imo, degrees) {
   map.entities.remove(layer2 );
+  closeInfobox();
   var url = 'https://getVesselTracker.com/get_vessel_position_history.php?i-m-o-number='+imo;
   req = $.ajax({
     url: url,
