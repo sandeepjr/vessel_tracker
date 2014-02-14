@@ -238,6 +238,7 @@ h1 {
     position: fixed;
     left: 50%;
     top: 50%;
+    opacity: .7;
 }
 
 #ajax_error {
