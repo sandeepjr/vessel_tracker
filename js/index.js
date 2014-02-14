@@ -1748,7 +1748,7 @@ function GetMap() {
     var pin = new Microsoft.Maps.Pushpin(clusterInfo.center);
 
     pin.title =  data.Name;
-    pin.description = [data.latitude,data.longitude,data.datetime,data.speed,data.imo,data.headingvalueofvalue];//data.latitude+"@/"+data.longitude+"@/"+data.datetime+"@/"+data.speed+"@/"+data.imo;
+    pin.description = [data.latitude,data.longitude,data.datetime,data.speed,data.imo];//data.latitude+"@/"+data.longitude+"@/"+data.datetime+"@/"+data.speed+"@/"+data.imo;
     //Add handler for the pushpin click event.
 
     Microsoft.Maps.Events.addHandler(pin, 'click', displayEventInfo);
@@ -1802,7 +1802,7 @@ function RequestData(url) {
     var description = pin.description;
     var html = "<div class='star'><a class='star_a' id='"+ description[4] +"' href='javascript:void(0)' onclick='add_bookmark(this.id);'><img src='img/star.png' class='star_i' id='i_"+ description[4] +"' width=25 height=25 /></a></div>";
     html += "<span class='infobox_title'>" + pin.title + "</span><br/>" ;
-    html+= "</br><b>Lag/Log:</b>"+prsflt(description[0])+"/"+prsflt(description[1])+"("+description[2]+")<br/> <b>Speed:</b>"+description[3]+"<br/>";
+    html+= "</br><b>Lag/Log:</b>"+prsflt(description[0])+"/"+prsflt(description[1])+"("+description[2]+")<br/> <b>Speed / Course:</b>"+description[3]+"<br/>";
     html += '<span class="popup_label"><button onclick="fetch_vessel_wiki('+description[4]+')" style="color:#00303f;font:bold 12px verdana;padding:5px;" title="vessel wiki">Additional Details</button></span>';
     html +='<span class="popup_label"><button onclick="show_vessel_path('+description[4]+','+description[5]+')" style="color:#00303f;font:bold 12px verdana; padding:5px;" title="click to see track">Show Track</button></span>';
 /*    html += '<div style="padding-top: 7px;">'+
@@ -1844,9 +1844,10 @@ function RequestData(url) {
            for (var i = 0; i < data.length; i++) {
             var lat_lon = parse_lat_lon(data[i]);
             dat.push(new DataModel(data[i]['asset-name'], lat_lon['lat'], lat_lon['lon'],
-              prsflt(data[i]['speed-value-of-value'])+data[i]['speed-units-of-value'],
+              prsflt(data[i]['speed-value-of-value']) + " " + data[i]['speed-units-of-value'].toLowerCase() + ", " + data[i]['heading-value-of-value'] + " " + data[i]['heading-units-of-value'].toLowerCase(),
               data[i]['trail-date-time'],
-              data[i]['i-m-o-number'], prsflt(data[i]['heading-value-of-value'])));
+              data[i]['i-m-o-number']));
+
           }
         } else {
           for( var i in data) {
@@ -1856,8 +1857,8 @@ function RequestData(url) {
               
               dat.push(new DataModel(data[i][j]['asset-name'], lat_lon['lat'], lat_lon['lon'], 
                 prsflt(data[i][j]['speed-value-of-value'])+data[i][j]['speed-units-of-value'], 
-                data[i][j]['trail-date-time-date-of-value']+data[i][j]['trail-date-time-time-of-value'],
-                data[i][j]['i-m-o-number'], prsflt(data[i][j]['heading-value-of-value'])));
+                prsflt(data[i][j]['speed-value-of-value']) + " " + data[i][j]['speed-units-of-value'].toLowerCase() + ", " + data[i][j]['heading-value-of-value'] + " " + data[i][j]['heading-units-of-value'].toLowerCase(),
+                data[i][j]['i-m-o-number']));
             }
           }
         }
@@ -1874,14 +1875,13 @@ function RequestData(url) {
     });      
 }
 
-var DataModel = function (name, latitude, longitude, speed, datetime, imo, headingvalueofvalue) {
+var DataModel = function (name, latitude, longitude, speed, datetime, imo) {
   this.Name = name;
   this.latitude = latitude;
   this.longitude = longitude;
   this.speed = speed;
   this.datetime = datetime;
   this.imo = imo;
-  this.headingvalueofvalue = headingvalueofvalue;
 };
 
 function closeInfobox() {
