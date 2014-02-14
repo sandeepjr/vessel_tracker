@@ -324,11 +324,12 @@ function print_array_to_div(input_array, heading) {
   // result += '<div data-role="collapsible" data-content-theme="c">' +
   //  "<h3>Header</h3>" +
   //  '<p>I\'m the collapsible content with a themed content block set to "c".</p>'+"</div>";
-  var result = '<div data-role="collapsible" data-theme="c" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d"><h3>'+heading+'</h3>';
+  var result = '<h3>'+heading+'</h3>';
+  result +='<div><p>';
   for( var key in input_array) {
-    result += '<div><span class"vessel_title_wiki">'+key+' : </span><span  class="vessel_text_wiki">'+input_array[key]+'</div>';
+    result += '<span class="vessel_title_wiki">'+key+' : </span><span  class="vessel_text_wiki">'+input_array[key]+'</span></br>';
   }
-  result += '</div>';
+  result += '</p></div>';
   return result;
 }
 
@@ -504,18 +505,19 @@ else vessel_details_arr['Management Type'] += '- )';
       var result =
       '<h2 class="vessel_name_wiki">'+toTitleCase(response['asset-name'])+' ('+response['sdc']+')</h2>' +
       '<div class="vessel_container_wiki">' +
+      '<div id="accordion">' +
       print_array_to_div(vessel_details_arr, 'Vessel Details') +
       print_array_to_div(voyage_details_arr, 'Voyage Details') +
       print_array_to_div(sea_condition, 'Sea Condition') +
       print_array_to_div(last_port_calls, 'Last Port Calls') +
       print_array_to_div(crew_list, 'Crew List') +
       print_array_to_div(vessel_contact_details, 'Contact Details') +
-      '</div>';
+      '</div></div>';
       
       hide_all_content();
       $('.vessel_wiki').show();
       $('.vessel_wiki').html(result);
-      $('.vessel_container_wiki').collapsibleset();
+      $("#accordion").accordion();
       if ($('#top_worldmap img').attr('src') == 'img/star2.png') {
         $('#top_worldmap img').attr('src','img/globe.png');
       } else {

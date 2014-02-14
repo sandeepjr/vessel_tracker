@@ -16,10 +16,10 @@
         
     <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
     <link rel="apple-touch-icon-precomposed" href="apple-touch-icon.png"/>
-
+<link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
     <link rel="stylesheet" type="text/css" href="css/ratchet.css" />
     <link rel="stylesheet" type="text/css" href="css/ratchet_android_overload.css" /> 
-    <link rel="stylesheet" type="text/css" href="css/jquery-ui.css" />
+    
     <link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
     <link rel="stylesheet" type="text/css" href="css/index.css" />
     
@@ -218,8 +218,24 @@
         $.support.cors = true;
       });
     </script>
-    
-
+     <script>
+  $(function() {
+    var icons = {
+      header: "ui-icon-circle-arrow-e",
+      activeHeader: "ui-icon-circle-arrow-s"
+    };
+    $( "#accordion" ).accordion({
+      icons: icons
+    });
+    $( "#toggle" ).button().click(function() {
+      if ( $( "#accordion" ).accordion( "option", "icons" ) ) {
+        $( "#accordion" ).accordion( "option", "icons", null );
+      } else {
+        $( "#accordion" ).accordion( "option", "icons", icons );
+      }
+    });
+  });
+  </script>
     <!-- <script type="text/javascript" src="js/cordova.js"></script> -->
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="phonegap.js"></script>
