@@ -656,6 +656,7 @@ function print_popup_content (my_array) {
           } else {
             q2_url = "https://getVesselTracker.com/vessel_tracker.php?source=purplefinder&vessel_name="+query+"&sdc_settings="+JSON.stringify(sdc_settings) + '&pal_user_id=' + $.jStorage.get("pal_user_id");
           }
+          console.debug(q2_url);
           GetMap();
           // RequestData(q2_url);
   req = $.ajax({
@@ -1843,8 +1844,8 @@ function RequestData(url) {
            for (var i = 0; i < data.length; i++) {
             var lat_lon = parse_lat_lon(data[i]);
             dat.push(new DataModel(data[i]['asset-name'], lat_lon['lat'], lat_lon['lon'],
-              data[i]['speed-value-of-value']+data[i]['speed-units-of-value'],
-              data[i]['trail-date-time-date-of-value']+data[i]['trail-date-time-time-of-value'],
+              prsflt(data[i]['speed-value-of-value'])+data[i]['speed-units-of-value'],
+              data[i]['trail-date-time'],
               data[i]['i-m-o-number'], prsflt(data[i]['heading-value-of-value'])));
           }
         } else {
@@ -1854,7 +1855,7 @@ function RequestData(url) {
               print_popup_content(data[i][j]);
               
               dat.push(new DataModel(data[i][j]['asset-name'], lat_lon['lat'], lat_lon['lon'], 
-                data[i][j]['speed-value-of-value']+data[i][j]['speed-units-of-value'], 
+                prsflt(data[i][j]['speed-value-of-value'])+data[i][j]['speed-units-of-value'], 
                 data[i][j]['trail-date-time-date-of-value']+data[i][j]['trail-date-time-time-of-value'],
                 data[i][j]['i-m-o-number'], prsflt(data[i][j]['heading-value-of-value'])));
             }
@@ -1891,3 +1892,23 @@ function hideInfobox(e) {
   infobox.setOptions({ visible: false });
 }
 /*-----End Map Dataload---------*/
+
+/******************Start Sccordion******************/
+
+  $(function() {
+    var icons = {
+      header: "ui-icon-circle-arrow-e",
+      activeHeader: "ui-icon-circle-arrow-s"
+    };
+    $( "#accordion" ).accordion({
+      icons: icons
+    });
+    $( "#toggle" ).button().click(function() {
+      if ( $( "#accordion" ).accordion( "option", "icons" ) ) {
+        $( "#accordion" ).accordion( "option", "icons", null );
+      } else {
+        $( "#accordion" ).accordion( "option", "icons", icons );
+      }
+    });
+  });
+/******************End Sccordion******************/
