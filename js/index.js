@@ -1802,7 +1802,7 @@ function RequestData(url) {
     var description = pin.description;
     var html = "<div class='star'><a class='star_a' id='"+ description[4] +"' href='javascript:void(0)' onclick='add_bookmark(this.id);'><img src='img/star.png' class='star_i' id='i_"+ description[4] +"' width=25 height=25 /></a></div>";
     html += "<span class='infobox_title'>" + pin.title + "</span><br/>" ;
-    html+= "</br><b>Lag/Log:</b>"+prsflt(description[0])+"/"+prsflt(description[1])+"("+description[2]+")<br/> <b>Speed / Course:</b>"+description[3]+"<br/>";
+    html+= "</br><b>Lag / Log:</b>"+prsflt(description[0])+"/"+prsflt(description[1])+"("+description[2]+")<br/> <b>Speed / Course:</b>"+description[3]+"<br/>";
     html += '<span class="popup_label"><button onclick="fetch_vessel_wiki('+description[4]+')" style="color:#00303f;font:bold 12px verdana;padding:5px;" title="vessel wiki">Additional Details</button></span>';
     html +='<span class="popup_label"><button onclick="show_vessel_path('+description[4]+','+description[5]+')" style="color:#00303f;font:bold 12px verdana; padding:5px;" title="click to see track">Show Track</button></span>';
 /*    html += '<div style="padding-top: 7px;">'+
@@ -1839,37 +1839,45 @@ function RequestData(url) {
           $(".spinner").center();
         },
         success: function(data){
-          var dat = [], randomLatitude, randomLongitude;
-          if(data instanceof Array) { 
-           for (var i = 0; i < data.length; i++) {
-            var lat_lon = parse_lat_lon(data[i]);
-            dat.push(new DataModel(data[i]['asset-name'], lat_lon['lat'], lat_lon['lon'],
-              prsflt(data[i]['speed-value-of-value']) + " " + data[i]['speed-units-of-value'].toLowerCase() + ", " + data[i]['heading-value-of-value'] + " " + data[i]['heading-units-of-value'].toLowerCase(),
-              data[i]['trail-date-time'],
-              data[i]['i-m-o-number']));
+          if(data!=null){
+            var dat = [], randomLatitude, randomLongitude;
+            if(data instanceof Array) { 
+             for (var i = 0; i < data.length; i++) {
+              var lat_lon = parse_lat_lon(data[i]);
+              dat.push(new DataModel(data[i]['asset-name'], lat_lon['lat'], lat_lon['lon'],
+                prsflt(data[i]['speed-value-of-value']) + " " + data[i]['speed-units-of-value'].toLowerCase() + ", " + data[i]['heading-value-of-value'] + " " + data[i]['heading-units-of-value'].toLowerCase(),
+                data[i]['trail-date-time'],
+                data[i]['i-m-o-number']));
 
-          }
-        } else {
-          for( var i in data) {
-            for (var j in data[i]) {
-              var lat_lon = parse_lat_lon(data[i][j]);
-              print_popup_content(data[i][j]);
-              
-              dat.push(new DataModel(data[i][j]['asset-name'], lat_lon['lat'], lat_lon['lon'], 
-                prsflt(data[i][j]['speed-value-of-value'])+data[i][j]['speed-units-of-value'], 
-                prsflt(data[i][j]['speed-value-of-value']) + " " + data[i][j]['speed-units-of-value'].toLowerCase() + ", " + data[i][j]['heading-value-of-value'] + " " + data[i][j]['heading-units-of-value'].toLowerCase(),
-                data[i][j]['i-m-o-number']));
+            }
+          } else {
+            for( var i in data) {
+              for (var j in data[i]) {
+                var lat_lon = parse_lat_lon(data[i][j]);
+                print_popup_content(data[i][j]);
+                
+                dat.push(new DataModel(data[i][j]['asset-name'], lat_lon['lat'], lat_lon['lon'], 
+                  prsflt(data[i][j]['speed-value-of-value'])+data[i][j]['speed-units-of-value'], 
+                  prsflt(data[i][j]['speed-value-of-value']) + " " + data[i][j]['speed-units-of-value'].toLowerCase() + ", " + data[i][j]['heading-value-of-value'] + " " + data[i][j]['heading-units-of-value'].toLowerCase(),
+                  data[i][j]['i-m-o-number']));
+              }
             }
           }
-        }
 
-        if (callback) {
-          $(".spinner").hide();
-          callback(dat);
+          if (callback) {
+            $(".spinner").hide();
+            callback(dat);
+          }
+        }else{
+          $('#spinner').hide();
+          alert("No data found Please change search criteria");
+          // map.entities.clear();
+          GetMap();
         }
       },
       error: function() {        
         alert('Please try again in a minute.');
+        $('#spinner').hide();
         $('#loadingSpinner').hide();
       }
     });      
