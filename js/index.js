@@ -718,8 +718,9 @@ function print_popup_content (my_array) {
               }
             }
             
-            else {
-              var content = print_favorites_result(response[i][j]);
+            else { 
+              var content;
+              content += print_favorites_result(response[i][j]);
               $('.results').html('');
               $('.favorites').html(content);
             }
@@ -1203,8 +1204,8 @@ if (sdc_settings == null || sdc_settings.length == 0) {
       }
     } else {
 
-      req = fetch_results('',sdc_settings,favoriteShips);
-      $('.favorites').html(print_favorites_result(req));
+       fetch_results('',sdc_settings,favoriteShips);
+     // $('.favorites').html(print_favorites_result(req));
     }
   }
 }
@@ -1315,7 +1316,6 @@ $('#top_settings').click(function(){
 
 $('#top_worldmap').click(function(){ 
   hide_all_content();
-  alert('here1');
   if ($('#top_worldmap img').attr('src') == 'img/globe.png') {
     $('#trackermap').show();
     $('#vessel_name').val("");
@@ -1324,7 +1324,6 @@ $('#top_worldmap').click(function(){
     $('#top_worldmap img').attr('src','img/star2.png');
   }
   else { 
-    alert('here2');
     hide_all_content();
     $(".favorites").html('');
     $(".favorites").show();
@@ -1335,7 +1334,6 @@ $('#top_worldmap').click(function(){
     $("#vessel_name").css('color','rgb(146,146,146)');
     // $('.spinner').css('display', 'none');
     if (favoriteShips == null || favoriteShips.length == 0) {
-      alert('here3');
       favoriteShips = new Array();
       if (first_time == 'false') {
         $("#ajax_error").css('display','inline');
@@ -1343,13 +1341,11 @@ $('#top_worldmap').click(function(){
         $("#ajax_error").center();
       }
     } else {
-      alert('here4');
-      req = fetch_results('',sdc_settings,favoriteShips);
-      $('.favorites').html(print_favorites_result(req));
+      /*req = */fetch_results('',sdc_settings,favoriteShips);
+      //$('.favorites').html(print_favorites_result(req));
     }
     $('#top_worldmap img').attr('src','img/globe.png');
   }
-  alert('here5');
 });
 
 
@@ -1692,10 +1688,10 @@ function show_vessel_path(imo, degrees) {
     }
   });
 }
-
 var vessel_path_plotted;
 // Function to Show ship_track
 function plot_vessel_track(current_position_lat_lon,previous_positions_lat_lon) {
+  //MapLayer.Children.Clear();
 // map.entities.clear();
   //map = new Microsoft.Maps.Map(document.getElementById("trackermap"), { credentials: "AvOyltb0YAu_Ldagk8wP_XiQQGfXkHo5rlWlLs-mIpsB3Gcvt87UC-BIZdgc3QbL" });
   var location1 = new Microsoft.Maps.Location(current_position_lat_lon['lat'], current_position_lat_lon['lon']);
@@ -1706,6 +1702,8 @@ function plot_vessel_track(current_position_lat_lon,previous_positions_lat_lon) 
   }
   map.setView({center: new Microsoft.Maps.Location(current_position_lat_lon['lat'], current_position_lat_lon['lon'])});
   var line = new Microsoft.Maps.Polyline(lineVertices);
+  /*vessel_path_plotted = line;
+  map.entities.remove(vessel_path_plotted);*/
   map.entities.push(line);
 }
 
