@@ -517,7 +517,9 @@ else vessel_details_arr['Management Type'] += '- )';
           hide_all_content();
           $('.vessel_wiki').show();
           $('.vessel_wiki').html(result);
-          $("#accordion").accordion();
+          $( "#accordion" ).accordion({
+            collapsible: true
+          });
           if ($('#top_worldmap img').attr('src') == 'img/star2.png') {
             $('#top_worldmap img').attr('src','img/globe.png');
           } else {
@@ -1914,20 +1916,4 @@ function hideInfobox(e) {
 
 /******************Start Sccordion******************/
 
-$(function() {
-  var icons = {
-    header: "ui-icon-circle-arrow-e",
-    activeHeader: "ui-icon-circle-arrow-s"
-  };
-  $( "#accordion" ).accordion({
-    icons: icons
-  });
-  $( "#toggle" ).button().click(function() {
-    if ( $( "#accordion" ).accordion( "option", "icons" ) ) {
-      $( "#accordion" ).accordion( "option", "icons", null );
-    } else {
-      $( "#accordion" ).accordion( "option", "icons", icons );
-    }
-  });
-});
     /******************End Sccordion******************/
