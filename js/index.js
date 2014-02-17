@@ -719,8 +719,7 @@ function print_favorites_result(my_array) {
                 }
                 
                 else { 
-                  var content;
-                  content += print_favorites_result(response[i][j]);
+                  var content = print_favorites_result(response[i][j]);
                   $('.results').html('');
                   $('.favorites').html(content);
                 }
