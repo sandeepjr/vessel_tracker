@@ -803,7 +803,7 @@ function show_sdc_settings() {
 //   alert(f);
 // }
 function save_sdc_settings() {
-  clear_all_markers();
+  // clear_all_markers();
   var sdc_settings2 = new Array();
   var vtype_settings2 = new Array();
   var num_sdcs = 13;
@@ -1619,7 +1619,7 @@ function bigger_bounds(bounds) {
 }
 google.maps.event.addDomListener(window, 'load');*/
 
-function clear_all_markers() {
+/*function clear_all_markers() {
   // TODO: Not working
   // for (var key in vessel_markers_with_imo) {
   //   if (vessel_markers_with_imo[key] != null) {
@@ -1632,13 +1632,13 @@ function clear_all_markers() {
       vessel_markers[i].setMap(null);
     }
   }
-/*  if (markerCluster) {
+  if (markerCluster) {
     markerCluster.clearMarkers();
   }
-*/
+
   vessel_markers_with_imo = new Array();
   vessel_markers = new Array();
-}
+}*/
 
 function clear_marker(imo) {
   index = vessel_markers_with_imo.indexOf(''+imo);
@@ -1665,7 +1665,7 @@ function show_vessel_path(imo, degrees) {
       var previous_positions_lat_lon = new Array();
 
       // clear_marker(imo);
-      clear_all_markers();
+      // clear_all_markers();
       var cur_lat_lon = parse_lat_lon(response[0]);
       var cur_lat = cur_lat_lon['lat'];
       var cur_lon = cur_lat_lon['lon'];
