@@ -773,7 +773,7 @@ function update_auto_complete(sdc_settings_auto) {
               // link: 'target.html?term=',
               select: function(event, ui) { 
 
-                var$("#vessel_name").val(ui.item.value);
+                $("#vessel_name").val(ui.item.value);
                 $("#search_form").submit();
                 
               },
