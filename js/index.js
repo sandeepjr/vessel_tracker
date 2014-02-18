@@ -592,7 +592,7 @@ function print_favorites_result(my_array) {
 
       result_div += '<div style="padding-top: 7px;">'+
       '<span class="popup_label"><button  onclick="fetch_vessel_wiki('+my_array['i-m-o-number']+')" style="color:#00303f;font:bold 12px verdana; padding:5px;" title="vessel wiki">Additional Details</a></span>' +
-      '<span class="popup_label"><button onclick="show_fav_on_map('+imo_number+')" class="show_on_map" id=map_'+imo_number+' style="color:#00303f;font:bold 12px verdana; padding:5px;" title="click to see track">Show On Map</a></span>'+
+      '<span class="popup_label"><button onclick="show_fav_on_map(\''+my_array['asset-name']+'\')" class="show_on_map" id=map_'+imo_number+' style="color:#00303f;font:bold 12px verdana; padding:5px;" title="click to see track">Show On Map</a></span>'+
       '</div>';
 
       // if(!officers) {
@@ -639,12 +639,12 @@ function print_favorites_result(my_array) {
               return contentString;
             }
 
-            function show_fav_on_map(imo) {
+            function show_fav_on_map(vname) {
               $(".favorites").hide();
               $(".favorites").html();
               $('#trackermap').show();
-              var query = $('#vessel_name').val();
-
+              //var query = $('#vessel_name').val();
+              var query = vname;
               //show_vessel_positions();
              // google.maps.event.trigger(map, 'resize');
              $('#top_worldmap img').attr('src','img/star2.png');
@@ -684,6 +684,7 @@ function print_favorites_result(my_array) {
             // response: ['sdc' | 'all' | 'fav'] [record_list] [atrributes]
             var search_res_content = '';
             var text_search = false;
+            var content='';
             for( var i in response) {
               for (var j in response[i]) {
                 num_results ++;
@@ -721,7 +722,8 @@ function print_favorites_result(my_array) {
                 }
                 
                 else { 
-                  var content = print_favorites_result(response[i][j]);
+                  
+                  content += print_favorites_result(response[i][j]);
                   $('.results').html('');
                   $('.favorites').html(content);
                 }
